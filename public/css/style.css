@@ -1,0 +1,281 @@
+*{
+    font-family: "Roboto", sans-serif;
+}
+
+.text-accent{
+    color: #5D4037;
+}
+
+.bg-accent {
+  background-color: #5D4037;
+  color: white;
+}
+
+
+
+
+.logo {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-weight: bold;
+        }
+
+        .logo .book {
+            color: #5D4037;
+        }
+
+        .logo .sphere {
+            color: #D7CCC8  ;
+        }
+
+        .logo .dot {
+            color: #D7CCC8  ;
+        }
+
+        .mainButton:hover{
+            color: #fff;
+            background-color: #5D4037;
+        }
+
+        a{
+            color: #151515;
+            text-decoration: none;
+        }
+
+        .card-light{
+            border-bottom: 6px solid #5D4037;
+            min-height: 300px;
+            max-height: 300px;
+        }
+
+        .card-accent{
+            background-color: #5D4037;
+            color: #fff;
+            border-bottom: 6px solid #151515;
+            min-height: 300px;
+            max-height: 300px;
+        }
+
+/* STEP HEADER */
+.step-header {
+    cursor: pointer;
+    border-radius: 1rem;
+    padding: 1.2rem 1.5rem;
+    background-color: #fff;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-bottom: 2px solid #5D4037;
+    margin-bottom: -1px; /* Hilangkan garis celah antar header dan body */
+}
+
+/* HEADER SAAT AKTIF */
+.step-header.active {
+    background-color: #5D4037;
+    color: white;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+/* STEP BODY (ISI YANG DIBUKA) */
+.step-body {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.4s ease, background-color 0.4s ease;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    background-color: transparent;
+    padding: 0 1.5rem;
+}
+
+/* BODY SAAT DIBUKA */
+.step-body.show {
+    max-height: 300px; /* Atur sesuai tinggi konten maksimum kira-kira */
+    background-color: #5D4037;
+    color: white;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #151515;
+
+}
+
+/* ICON PLUS MINUS */
+.step-header i {
+    transition: transform 0.3s ease, color 0.3s ease;
+    font-size: 1.5rem;
+    color: #5D4037;
+}
+
+.step-header.active i {
+    color: white;
+}
+
+.imgRegister{
+    background-image: url('/img/ebook.jpg');
+    background-size: cover;
+    background-repeat: none;
+    background-position: center;
+}
+
+.auth-wrapper {
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .form-container {
+            width: 200%;
+            height: 100%;
+            display: flex;
+            transition: transform 0.6s ease-in-out;
+        }
+
+        .form-section {
+            width: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .slide-left {
+            transform: translateX(-50%);
+        }
+
+                .imgLogin {
+    background: url('/img/loginBanner.jpg') no-repeat center center;
+    background-size: cover;
+    height: 100vh;
+                }
+
+        .imgRegister {
+    background: url('/img/ebook.jpg') no-repeat center center;
+    background-size: cover;
+    height: 100vh;
+
+}
+
+
+/* Sembunyikan checkbox asli */
+.custom-checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    background-color: #fff;
+    margin: 0;
+    font: inherit;
+    color: currentColor;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #5D4037;
+    border-radius: 4px;
+    display: inline-grid;
+    place-content: center;
+    transition: background-color 0.25s, border-color 0.25s;
+    position: relative;
+}
+
+/* Saat dicentang */
+.custom-checkbox:checked {
+    background-color: #5D4037;
+    border-color: #5D4037;
+}
+
+/* Tanda centang */
+.custom-checkbox:checked::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    transform: scale(1);
+    background-color: white;
+    border-radius: 2px;
+    display: block;
+}
+
+/* Fokus */
+.custom-checkbox:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(93, 64, 55, 0.25);
+}
+
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1040;
+}
+
+
+/* Sidebar Collapse */
+.sidebar-collapsed #adminSidebar {
+    width: 70px !important;
+    overflow-x: hidden;
+}
+
+.sidebar-collapsed #adminSidebar .sidebar-label {
+    display: none !important;
+}
+
+.sidebar-collapsed main {
+    margin-left: 70px !important;
+}
+
+
+.object-fit-cover {
+    object-fit: cover;
+    height: 100%;
+}
+
+@media (max-width: 767.98px) {
+    .object-fit-cover {
+        height: auto;
+        object-fit: contain;
+    }
+}
+
+
+.pagination .page-link {
+    border-radius: 50px;
+    color: #6c757d;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #5D4037;
+    border-color: #5D4037;
+    color: white;
+}
+
+.pagination .page-item.disabled .page-link {
+    background-color: #f8f9fa;
+    color: #adb5bd;
+}
+
+.pagination .page-link:hover {
+    color: #5D4037;
+}
+
+.pagination .page-item {
+    margin: 0 8px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
