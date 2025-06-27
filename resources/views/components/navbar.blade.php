@@ -21,14 +21,37 @@
         <div class="collapse navbar-collapse justify-content-end" id="navbarMain">
 
             @if (!$isAdminPage)
-            <ul class="navbar-nav me-5 mb-2 mb-lg-0 align-items-center">
-                <li class="nav-item"><a class="nav-link px-3" href="#">Beranda</a></li>
-                <li class="nav-item"><a class="nav-link px-3" href="#">Layanan</a></li>
-                <li class="nav-item"><a class="nav-link px-3" href="#">Katalog</a></li>
-                <li class="nav-item"><a class="nav-link px-3" href="#">Kategori</a></li>
-                <li class="nav-item"><a class="nav-link px-3" href="#">Tentang Kami</a></li>
-                <li class="nav-item"><a class="nav-link px-3" href="#">Blog</a></li>
-            </ul>
+                <ul class="navbar-nav me-5 mb-2 mb-lg-0 align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link px-3 {{ Request::is('homepage') ? 'active fw-semibold text-primary-custom' : '' }}"
+                            href="{{ route('homepage') }}">
+                            Beranda
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3 {{ Request::is('books/popular*') ? 'active fw-semibold text-primary-custom' : '' }}"
+                            href="{{ route('user.books.popular') }}">
+                            Populer
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3 {{ Request::is('books') ? 'active fw-semibold text-primary-custom' : '' }}"
+                            href="{{ route('user.books.index') }}">
+                            Katalog
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3 {{ Request::is('kategori*') ? 'active fw-semibold text-primary-custom' : '' }}"
+                            href="{{ route('user.category.index') }}">
+                            Kategori
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3 scroll-link" href="#tentang" data-target="tentang">
+                            Tentang
+                        </a>
+                    </li>
+                </ul>
             @endif
 
             @auth
@@ -124,3 +147,30 @@
         </div>
     </div>
 </nav>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const sections = document.querySelectorAll("section[id]");
+        const navLinks = document.querySelectorAll(".scroll-link");
+
+        window.addEventListener("scroll", () => {
+            let current = "";
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                const sectionHeight = section.offsetHeight;
+                if (pageYOffset >= sectionTop && pageYOffset < sectionTop + sectionHeight) {
+                    current = section.getAttribute("id");
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove("text-primary-custom", "fw-semibold");
+                if (link.dataset.target === current) {
+                    link.classList.add("text-primary-custom", "fw-semibold");
+                }
+            });
+        });
+    });
+</script>

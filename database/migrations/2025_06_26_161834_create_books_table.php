@@ -13,10 +13,36 @@ return new class extends Migration
     {
         Schema::create('books', function (Blueprint $table) {
             $table->id();
+
+            // Informasi Bibliografi
             $table->string('title');
             $table->string('author');
-            $table->foreignId('category_id')->constrained()->onDelete('cascade');
+            $table->string('publisher')->nullable();
+            $table->string('isbn')->nullable()->unique();
+            $table->unsignedSmallInteger('published_year')->nullable();
+            $table->string('edition')->nullable();
+            $table->string('language')->default('Indonesia');
+            $table->unsignedInteger('page_count')->nullable();
+            $table->text('synopsis')->nullable();
+
+            // Cover & Kategori
             $table->string('cover_url')->nullable();
+            $table->foreignId('category_id')->constrained()->onDelete('cascade');
+
+            // Status eBook
+            $table->boolean('is_readable')->default(false);
+
+            // Popularitas (dari Internet Archive atau internal tracking)
+            $table->unsignedBigInteger('view_count')->default(0);
+
+            // Rating opsional
+            $table->float('rating', 2, 1)->nullable();
+            $table->unsignedInteger('rating_count')->default(0);
+
+            $table->string('google_id')->nullable()->unique();
+            $table->string('read_url')->nullable();
+            $table->string('source')->default('manual');
+
             $table->timestamps();
         });
     }

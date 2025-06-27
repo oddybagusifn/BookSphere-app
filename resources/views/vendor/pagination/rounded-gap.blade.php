@@ -8,7 +8,8 @@
                 </li>
             @else
                 <li class="page-item">
-                    <a class="page-link rounded-circle" href="{{ $paginator->previousPageUrl() }}" rel="prev">&lsaquo;</a>
+                    <a class="page-link rounded-circle" href="{{ $paginator->previousPageUrl() }}"
+                        rel="prev">&lsaquo;</a>
                 </li>
             @endif
 
@@ -24,11 +25,13 @@
                     @foreach ($element as $page => $url)
                         @if ($page == $paginator->currentPage())
                             <li class="page-item active">
-                                <span class="page-link rounded-circle" style="background-color:#5D4037; color:white;">{{ $page }}</span>
+                                <span class="page-link rounded-circle"
+                                    style="background-color:#5D4037; color:white;">{{ $page }}</span>
                             </li>
                         @else
                             <li class="page-item">
-                                <a class="page-link rounded-circle text-secondary" href="{{ $url }}">{{ $page }}</a>
+                                <a class="page-link rounded-circle text-secondary"
+                                    href="{{ $url }}">{{ $page }}</a>
                             </li>
                         @endif
                     @endforeach
@@ -38,7 +41,8 @@
             {{-- Next Page Link --}}
             @if ($paginator->hasMorePages())
                 <li class="page-item">
-                    <a class="page-link rounded-circle" href="{{ $paginator->nextPageUrl() }}" rel="next">&rsaquo;</a>
+                    <a class="page-link rounded-circle" href="{{ $paginator->nextPageUrl() }}"
+                        rel="next">&rsaquo;</a>
                 </li>
             @else
                 <li class="page-item disabled">

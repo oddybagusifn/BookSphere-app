@@ -4,9 +4,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Middleware\RoleMiddleware;
+use App\Http\Controllers\BookController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Auth\GoogleController;
+use App\Http\Controllers\User\ReviewController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\User\HomepageController;
 use App\Http\Controllers\Admin\CategoryController;
@@ -56,4 +58,12 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/homepage', [HomepageController::class, 'index'])->name('homepage');
+    Route::get('/homepage/books', [HomepageController::class, 'index'])->name('user.books.homepage');
+    Route::get('/books/popular', [BookController::class, 'popular'])->name('user.books.popular');
+    Route::get('/books', [BookController::class, 'index'])->name('user.books.index');
+    Route::get('/books/{id}', [BookController::class, 'show'])->name('user.books.show');
+    Route::post('/books/{id}/borrow', [BookController::class, 'borrow'])->name('user.books.borrow');
+    Route::get('/kategori', [CategoryController::class, 'index'])->name('user.category.index');
+
+    Route::post('/books/{book}/review', [ReviewController::class, 'store'])->name('user.books.review');
 });

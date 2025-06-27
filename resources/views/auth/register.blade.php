@@ -89,7 +89,8 @@
 
                             <!-- Checkbox -->
                             <div class="form-check mb-3">
-                                <input class="form-check-input custom-checkbox" type="checkbox" id="termsCheck" name="termsCheck" required>
+                                <input class="form-check-input custom-checkbox" type="checkbox" id="termsCheck"
+                                    name="termsCheck" required>
                                 <label class="form-check-label small" for="termsCheck">
                                     Saya menyetujui <a href="#" class="text-accent">Ketentuan Layanan</a> dan
                                     <a href="#" class="text-accent">Kebijakan Privasi</a>.

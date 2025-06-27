@@ -38,8 +38,8 @@ class GoogleController extends Controller
         Auth::login($user, true);
 
         if ($user->role === 'admin') {
-        return redirect()->route('admin.dashboard');
-    }
+            return redirect()->route('admin.dashboard');
+        }
 
         // Redirect ke halaman utama
         return redirect()->route('homepage')->with('success', 'Berhasil login dengan Google!');

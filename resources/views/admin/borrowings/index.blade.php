@@ -30,7 +30,7 @@
                         style="background: linear-gradient(135deg, #4E342E, #b4a19b); min-height: 140px;">
                         <div class="card-body p-4">
                             <div class="d-flex align-items-start gap-3">
-                                <i class=" ph ph-star" style="font-size: 36px;"></i>
+                                <i class=" ph ph-fire" style="font-size: 36px;"></i>
                                 <div>
                                     <div class="fs-6 text-white-50">Buku Terpopuler</div>
                                     @if ($mostBorrowedBook)

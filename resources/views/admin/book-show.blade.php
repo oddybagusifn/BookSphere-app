@@ -47,7 +47,7 @@
                     </div>
 
                     <div class="mt-4">
-                        <a href="{{ route('admin.dashboard') }}" class="btn bg-accent border rounded-pill px-4 me-2">
+                        <a href="{{ route('admin.books') }}" class="btn bg-accent border rounded-pill px-4 me-2">
                             <i class="ph ph-list me-1"></i> Lihat Daftar Buku
                         </a>
                         <a href="{{ route('admin.dashboard') }}" class="btn btn-dark border border-dark rounded-pill px-4">

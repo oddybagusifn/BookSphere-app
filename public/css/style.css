@@ -258,6 +258,12 @@
 }
 
 
+.text-primary-custom {
+    color: #5D4037 !important;
+}
+.nav-link.active {
+    color: #5D4037 !important;
+}
 
 
 

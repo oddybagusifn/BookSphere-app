@@ -19,7 +19,7 @@ class AdminSeeder extends Seeder
             [
                 'username' => 'Admin',
                 'email' => 'admin@booksphere.com',
-                'password' => Hash::make('password123'), // ubah sesuai kebutuhan
+                'password' => Hash::make('password123'),
                 'role' => 'admin',
                 'google_id' => null,
                 'avatar' => null,

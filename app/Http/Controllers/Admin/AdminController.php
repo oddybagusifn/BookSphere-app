@@ -56,7 +56,7 @@ class AdminController extends Controller
             'author'       => 'required|string|max:255',
             'category_id'  => 'required|exists:categories,id',
             'description'  => 'nullable|string',
-            'cover'        => 'nullable|image|max:2048',
+            'cover'        => 'nullable|image|max:20480',
         ]);
 
         // Simpan file ke public/covers/
@@ -93,7 +93,7 @@ class AdminController extends Controller
             'author'       => 'required|string|max:255',
             'category_id'  => 'required|exists:categories,id',
             'description'  => 'nullable|string',
-            'cover'        => 'nullable|image|max:2048',
+            'cover'        => 'nullable|image|max:20480',
         ]);
 
         // Jika ada file baru, simpan ke public/covers/
