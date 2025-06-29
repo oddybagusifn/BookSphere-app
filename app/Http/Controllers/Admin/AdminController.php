@@ -44,7 +44,7 @@ class AdminController extends Controller
     // Form tambah buku
     public function create()
     {
-        $categories = Category::all();
+        $categories = Category::orderBy('name')->get(['name']);
         return view('admin.book-create', compact('categories'));
     }
 
@@ -52,25 +52,46 @@ class AdminController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title'        => 'required|string|max:255',
-            'author'       => 'required|string|max:255',
-            'category_id'  => 'required|exists:categories,id',
-            'description'  => 'nullable|string',
-            'cover'        => 'nullable|image|max:20480',
+            'title'          => 'required|string|max:255',
+            'author'         => 'required|string|max:255',
+            'category_name'  => 'required|string|max:100',
+            'synopsis'       => 'nullable|string',
+            'publisher'      => 'nullable|string|max:255',
+            'isbn'           => 'nullable|string|max:255|unique:books,isbn',
+            'published_year' => 'nullable|integer',
+            'edition'        => 'nullable|string|max:100',
+            'language'       => 'nullable|string|max:100',
+            'page_count'     => 'nullable|integer',
+            'read_url'       => 'nullable|url',
+            'is_readable'    => 'nullable|boolean',
+            'cover'          => 'nullable|image|max:20480',
         ]);
 
-        // Simpan file ke public/covers/
+        // ✅ Cari atau buat kategori
+        $category = \App\Models\Category::firstOrCreate([
+            'name' => $validated['category_name'],
+        ]);
+
+        // Handle cover
         if ($request->hasFile('cover')) {
-            $file     = $request->file('cover');
+            $file = $request->file('cover');
             $filename = time() . '_' . $file->getClientOriginalName();
             $file->move(public_path('covers'), $filename);
             $validated['cover_url'] = 'covers/' . $filename;
         }
 
-        Book::create($validated);
+        // Simpan buku
+        $book = new \App\Models\Book();
+        $book->fill($validated);
+        $book->category_id = $category->id;
+        $book->is_readable = $request->has('is_readable');
+        $book->source = 'manual';
+        $book->save();
 
         return redirect()->route('admin.dashboard')->with('success', 'Buku berhasil ditambahkan!');
     }
+
+
 
     // Tampilkan detail buku
     public function show(Book $book)
@@ -85,29 +106,50 @@ class AdminController extends Controller
         return view('admin.book-edit', compact('book', 'categories'));
     }
 
-    // Simpan perubahan buku
     public function update(Request $request, Book $book)
     {
         $validated = $request->validate([
-            'title'        => 'required|string|max:255',
-            'author'       => 'required|string|max:255',
-            'category_id'  => 'required|exists:categories,id',
-            'description'  => 'nullable|string',
-            'cover'        => 'nullable|image|max:20480',
+            'title'          => 'required|string|max:255',
+            'author'         => 'required|string|max:255',
+            'category_name'  => 'required|string|max:255',
+            'synopsis'       => 'nullable|string',
+            'publisher'      => 'nullable|string',
+            'isbn'           => 'nullable|string|max:255',
+            'published_year' => 'nullable|integer',
+            'edition'        => 'nullable|string|max:255',
+            'language'       => 'nullable|string|max:255',
+            'page_count'     => 'nullable|integer',
+            'read_url'       => 'nullable|url',
+            'is_readable'    => 'nullable|boolean',
+            'cover'          => 'nullable|image|max:20480',
         ]);
 
-        // Jika ada file baru, simpan ke public/covers/
+        // Cek/insert kategori berdasarkan nama
+        $category = Category::firstOrCreate(
+            ['name' => $request->input('category_name')]
+        );
+
+        // Handle cover file jika diubah
         if ($request->hasFile('cover')) {
             $filename = time() . '_' . $request->file('cover')->getClientOriginalName();
             $request->file('cover')->move(public_path('covers'), $filename);
             $validated['cover_url'] = 'covers/' . $filename;
         }
 
+        // Masukkan category_id
+        $validated['category_id'] = $category->id;
+
+        // Update is_readable (checkbox)
+        $validated['is_readable'] = $request->has('is_readable');
+
+        // Set manual source tetap
+        $validated['source'] = 'manual';
 
         $book->update($validated);
 
         return redirect()->route('admin.books')->with('success', 'Buku berhasil diperbarui!');
     }
+
 
     // Hapus buku
     public function destroy(Book $book)

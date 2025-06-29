@@ -2,7 +2,8 @@
 
 @section('content')
     <section class="py-5 px-3 px-md-5 min-vh-100">
-        <div class="container-fluid">
+        <div class="container">
+            <!-- Heading -->
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h3 class="fw-bold text-accent">
                     <i class="ph ph-pencil-simple me-2"></i> Edit Buku
@@ -12,17 +13,20 @@
                 </a>
             </div>
 
+            <!-- Form Card -->
             <div class="card shadow-sm border-0 rounded-4">
                 <div class="card-body p-4 p-md-5">
-                    <form action="{{ route('admin.books.update', $book->id) }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('admin.books.update', $book->id) }}" method="POST"
+                        enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
 
                         <!-- Judul Buku -->
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Judul Buku</label>
-                            <input type="text" name="title" class="form-control rounded-3 @error('title') is-invalid @enderror"
-                                value="{{ old('title', $book->title) }}">
+                            <input type="text" name="title"
+                                class="form-control rounded-3 @error('title') is-invalid @enderror"
+                                value="{{ old('title', $book->title) }}" placeholder="Contoh: Surti Tejo">
                             @error('title')
                                 <div class="text-danger small mt-1">{{ $message }}</div>
                             @enderror
@@ -31,62 +35,146 @@
                         <!-- Penulis -->
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Penulis</label>
-                            <input type="text" name="author" class="form-control rounded-3 @error('author') is-invalid @enderror"
-                                value="{{ old('author', $book->author) }}">
+                            <input type="text" name="author"
+                                class="form-control rounded-3 @error('author') is-invalid @enderror"
+                                value="{{ old('author', $book->author) }}" placeholder="Contoh: Budi Santoso">
                             @error('author')
                                 <div class="text-danger small mt-1">{{ $message }}</div>
                             @enderror
                         </div>
 
+                        <!-- Penerbit -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Penerbit</label>
+                            <input type="text" name="publisher" class="form-control rounded-3"
+                                value="{{ old('publisher', $book->publisher) }}">
+                        </div>
+
+                        <!-- ISBN & Tahun Terbit -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">ISBN</label>
+                                <input type="text" name="isbn" class="form-control rounded-3"
+                                    value="{{ old('isbn', $book->isbn) }}">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Tahun Terbit</label>
+                                <input type="number" name="published_year" class="form-control rounded-3"
+                                    value="{{ old('published_year', $book->published_year) }}">
+                            </div>
+                        </div>
+
+                        <!-- Edisi & Bahasa -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Edisi</label>
+                                <input type="text" name="edition" class="form-control rounded-3"
+                                    value="{{ old('edition', $book->edition) }}">
+                            </div>
+                            <div class="col-md-6 ">
+                                <label class="form-label fw-semibold">Bahasa</label>
+                                <select id="languageSelect" name="language" class="form-select rounded-3" data-selected="{{ old('language', $book->language ?? '') }}>
+                                    <option value="">Memuat daftar bahasa...</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Jumlah Halaman -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Jumlah Halaman</label>
+                            <input type="number" name="page_count" class="form-control rounded-3"
+                                value="{{ old('page_count', $book->page_count) }}">
+                        </div>
+
                         <!-- Kategori -->
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Kategori</label>
-                            <select name="category_id" class="form-select rounded-3 @error('category_id') is-invalid @enderror">
-                                @foreach ($categories as $category)
-                                    <option value="{{ $category->id }}" {{ old('category_id', $book->category_id) == $category->id ? 'selected' : '' }}>
-                                        {{ $category->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('category_id')
+                            <input type="text" name="category_name"
+                                class="form-control rounded-3 @error('category_name') is-invalid @enderror"
+                                value="{{ old('category_name', $book->category->name ?? '') }}"
+                                placeholder="Contoh: Fiksi, Biografi, Teknologi...">
+                            @error('category_name')
                                 <div class="text-danger small mt-1">{{ $message }}</div>
                             @enderror
                         </div>
 
-                        <!-- Deskripsi -->
+                        <!-- Sinopsis -->
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Deskripsi</label>
-                            <textarea name="description" class="form-control rounded-3 @error('description') is-invalid @enderror"
-                                      rows="4">{{ old('description', $book->description) }}</textarea>
-                            @error('description')
-                                <div class="text-danger small mt-1">{{ $message }}</div>
-                            @enderror
+                            <label class="form-label fw-semibold">Sinopsis</label>
+                            <textarea name="synopsis" class="form-control rounded-3" rows="4" placeholder="Tulis ringkasan isi buku...">{{ old('synopsis', $book->synopsis) }}</textarea>
+                        </div>
+
+                        <!-- Link Baca -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Link Baca (jika ada)</label>
+                            <input type="url" name="read_url" class="form-control rounded-3"
+                                value="{{ old('read_url', $book->read_url) }}">
+                        </div>
+
+                        <!-- Apakah Bisa Dibaca -->
+                        <div class="form-check form-switch mb-4">
+                            <input class="form-check-input" type="checkbox" name="is_readable" id="isReadable"
+                                value="1" {{ old('is_readable', $book->is_readable) ? 'checked' : '' }}>
+                            <label class="form-check-label fw-semibold" for="isReadable">Buku dapat dibaca langsung</label>
                         </div>
 
                         <!-- Cover -->
                         <div class="mb-4">
-                            <label class="form-label fw-semibold">Cover Buku (kosongkan jika tidak diubah)</label>
-                            <input type="file" name="cover" class="form-control rounded-3 @error('cover') is-invalid @enderror">
+                            <label class="form-label fw-semibold">Cover Buku</label>
+                            <input type="file" name="cover"
+                                class="form-control rounded-3 @error('cover') is-invalid @enderror">
                             @error('cover')
                                 <div class="text-danger small mt-1">{{ $message }}</div>
                             @enderror
+
                             @if ($book->cover_url)
                                 <div class="mt-2">
-                                    <img src="{{ asset('storage/' . $book->cover_url) }}" alt="Cover Buku" width="100" class="rounded shadow-sm">
+                                    <img src="{{ asset($book->cover_url) }}" alt="Cover Buku" width="120"
+                                        class="rounded shadow-sm">
                                 </div>
                             @endif
                         </div>
 
-                        <!-- Tombol -->
+                        <!-- Tombol Simpan -->
                         <div class="d-flex justify-content-end">
                             <button type="submit" class="btn text-white fw-semibold px-4 py-2"
-                                    style="background-color: #5D4037;">
-                                <i class="ph ph-floppy-disk me-2"></i> Perbarui Buku
+                                style="background-color: #5D4037;">
+                                <i class="ph ph-floppy-disk me-2"></i> Simpan Perubahan
                             </button>
                         </div>
+
+                        <input type="hidden" name="source" value="manual">
                     </form>
                 </div>
             </div>
         </div>
     </section>
 @endsection
+
+@push('scripts')
+    <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+            const select = document.getElementById("languageSelect");
+            const selectedLang = select.dataset.selected;
+
+
+
+            try {
+                const response = await fetch("https://libretranslate.com/languages");
+                const languages = await response.json();
+
+                select.innerHTML = `<option value="">-- Pilih Bahasa --</option>`;
+                languages.forEach(lang => {
+                    const option = document.createElement("option");
+                    option.value = lang.name;
+                    option.textContent = lang.name;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error("Gagal memuat bahasa:", error);
+                select.innerHTML = `<option value="">Gagal memuat bahasa</option>`;
+            }
+
+        });
+    </script>
+@endpush

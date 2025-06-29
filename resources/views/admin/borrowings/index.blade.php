@@ -86,7 +86,7 @@
                                             @endif
                                         </td>
                                         <td class="px-3 py-3 align-middle">
-                                            @if ($borrow->returned_at)
+                                            @if ($borrow->returned_at && now()->greaterThanOrEqualTo($borrow->returned_at))
                                                 <span class="badge rounded-pill bg-success">Dikembalikan</span>
                                             @else
                                                 <span class="badge rounded-pill bg-warning text-dark">Sedang Meminjam</span>

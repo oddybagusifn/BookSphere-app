@@ -56,8 +56,21 @@ class Book extends Model
     }
 
     public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    public function updateRatingSummary()
+    {
+        $this->rating_count = $this->reviews()->count();
+        $this->rating = $this->reviews()->avg('rating') ?? 0;
+        $this->save();
+    }
+
+    public function getAverageRatingAttribute()
 {
-    return $this->hasMany(Review::class);
+    return $this->reviews()->avg('rating') ?? 0;
 }
 
 }
+

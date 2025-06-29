@@ -33,4 +33,17 @@ class CategoryController extends Controller
 
         return redirect()->route('admin.categories.index')->with('success', 'Kategori berhasil dihapus.');
     }
+
+
+    public function search(Request $request)
+    {
+        $search = $request->query('search');
+
+        $categories = Category::where('name', 'like', '%' . $search . '%')
+            ->orderBy('name')
+            ->take(10)
+            ->get(['name']);
+
+        return response()->json($categories);
+    }
 }

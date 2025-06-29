@@ -12,4 +12,9 @@ class Category extends Model
     {
         return $this->hasMany(Book::class);
     }
+
+    public function booksPaginated($perPage = 4)
+    {
+        return $this->hasMany(Book::class)->paginate($perPage);
+    }
 }

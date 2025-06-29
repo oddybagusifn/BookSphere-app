@@ -7,7 +7,7 @@
                 BookSphere adalah platform digital untuk membantu Anda menjelajahi, meminjam, dan menikmati koleksi buku
                 dengan mudah.
             </p>
-            <a href="#kontak" class="btn btn-light btn-dark px-4 py-2 fw-semibold rounded-pill">Contact Us</a>
+            <a href="#kontak" class="btn btn-dark px-4 py-2 fw-semibold rounded-pill" style="background-color: #5D4037">Contact Us</a>
 
             <p class="mt-5 small text-secondary">&copy; 2025 BookSphere. All rights reserved.</p>
         </div>

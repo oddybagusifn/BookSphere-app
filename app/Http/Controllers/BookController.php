@@ -37,23 +37,74 @@ class BookController extends Controller
 
     public function show($id)
     {
-        $book = Book::with(['category', 'reviews.user'])->findOrFail($id);
+        $book = Book::with(['category'])->findOrFail($id);
 
-        // Rekomendasi
+        // Rekomendasi buku sejenis
         $relatedBooks = Book::where('category_id', $book->category_id)
             ->where('id', '!=', $book->id)
             ->latest()
             ->take(4)
             ->get();
 
-        $reviews = $book->reviews;
-        $totalReviews = $reviews->count();
-        $reviewCounts = $reviews->groupBy('rating')->map->count();
-        $reviewDistribution = $reviewCounts->map(fn($count) => ($count / max($reviews->count(), 1)) * 100);
+        // Ambil semua review untuk kebutuhan statistik
+        $allReviews = $book->reviews()->with('user')->latest()->get();
 
-        $averageRating = $reviews->avg('rating') ?? 0;
-        // dd($totalReviews);
+        // Jika query ?all=true, tampilkan semua review
+        if (request('all') === 'true') {
+            $reviews = $allReviews;
+        } else {
+            $reviews = $book->reviews()->with('user')->latest()->paginate(3);
+        }
 
-        return view('user.books.show', compact('book', 'relatedBooks', 'totalReviews', 'reviewCounts', 'reviewDistribution', 'averageRating'));
+        // Hitung statistik review
+        $totalReviews = $allReviews->count();
+        $averageRating = $book->average_rating;
+
+        $reviewCounts = collect(range(1, 5))->mapWithKeys(function ($i) use ($allReviews) {
+            return [$i => $allReviews->where('rating', $i)->count()];
+        });
+
+        $reviewDistribution = $reviewCounts->map(function ($count) use ($totalReviews) {
+            return $totalReviews > 0 ? ($count / $totalReviews) * 100 : 0;
+        });
+
+        return view('user.books.show', compact(
+            'book',
+            'relatedBooks',
+            'reviews',
+            'totalReviews',
+            'reviewCounts',
+            'reviewDistribution',
+            'averageRating'
+        ));
     }
+
+
+
+    public function ajaxSearch(Request $request)
+    {
+        $query = $request->get('query');
+
+        $books = Book::with(['category', 'reviews'])
+            ->when($query, function ($q) use ($query) {
+                $q->where('title', 'like', "%$query%")
+                    ->orWhere('author', 'like', "%$query%")
+                    ->orWhere('published_year', 'like', "%$query%")
+                    ->orWhereHas('category', function ($q2) use ($query) {
+                        $q2->where('name', 'like', "%$query%");
+                    });
+            })
+            ->get();
+
+        $html = '';
+        foreach ($books as $book) {
+            $averageRating = number_format($book->reviews->avg('rating') ?? 0, 1);
+            $html .= view('book_card_inline', compact('book', 'averageRating'))->render();
+        }
+
+        return response()->json(['html' => $html]);
+    }
+
+
+
 }

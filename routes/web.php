@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Middleware\RoleMiddleware;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\User\CartController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Auth\GoogleController;
@@ -13,6 +14,8 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\User\HomepageController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\BorrowingController;
+use App\Http\Controllers\User\CollectionController;
+use App\Http\Controllers\User\CategoryController as UserCategoryController;
 
 Route::get('/', function () {
     return view('landingPage');
@@ -63,7 +66,23 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/books', [BookController::class, 'index'])->name('user.books.index');
     Route::get('/books/{id}', [BookController::class, 'show'])->name('user.books.show');
     Route::post('/books/{id}/borrow', [BookController::class, 'borrow'])->name('user.books.borrow');
-    Route::get('/kategori', [CategoryController::class, 'index'])->name('user.category.index');
+    Route::get('/category', [UserCategoryController::class, 'index'])->name('user.category.index');
+    Route::get('/categories/{id}', [UserCategoryController::class, 'show'])->name('user.categories.show');
 
     Route::post('/books/{book}/review', [ReviewController::class, 'store'])->name('user.books.review');
+
+    Route::get('/ajax/book-search', [BookController::class, 'ajaxSearch']);
+    Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
+
+    Route::get('/cart/view', [CartController::class, 'viewCart'])->name('cart.view');
+    Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
+
+    Route::get('/borrow-verification', [CartController::class, 'verify'])->name('cart.verify');
+
+    Route::post('/verify/submit', [CartController::class, 'submitVerification'])->name('verify.submit');
+
+    Route::get('/collection', [CollectionController::class, 'index'])->name('user.collection');
+    Route::patch('/collection/return/{id}', [CollectionController::class, 'returnBook'])->name('user.collection.return');
+
+
 });
