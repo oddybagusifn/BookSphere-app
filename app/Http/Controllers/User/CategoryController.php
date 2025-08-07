@@ -26,6 +26,4 @@ class CategoryController extends Controller
 
         return view('user.books.category-show', compact('category', 'books'));
     }
-
-
 }
