@@ -9,41 +9,46 @@ use App\Http\Controllers\Controller;
 
 class BorrowingController extends Controller
 {
+    /**
+     * Display a listing of borrowings with statistics.
+     */
     public function index()
     {
+        // Data peminjaman dengan relasi user & book
         $borrowings = Borrowing::with(['user', 'book'])
             ->orderBy('borrowed_at', 'desc')
             ->paginate(10)
             ->onEachSide(3);
 
+        // Total semua peminjaman
         $totalBorrowings = Borrowing::count();
 
-        // Deteksi driver database (pgsql atau mysql)
+        // Deteksi driver database (pgsql atau mysql/mariadb)
         $driver = DB::getDriverName();
 
         if ($driver === 'pgsql') {
-            // PostgreSQL pakai EXTRACT
-            $borrowsData = Borrowing::selectRaw('EXTRACT(MONTH FROM borrowed_at) as month, COUNT(*) as total')
+            // PostgreSQL → gunakan EXTRACT untuk ambil bulan
+            $borrowsData = Borrowing::selectRaw('EXTRACT(MONTH FROM borrowed_at) AS month, COUNT(*) AS total')
                 ->groupBy('month')
                 ->orderBy('month')
                 ->pluck('total', 'month')
                 ->toArray();
         } else {
-            // MySQL/MariaDB pakai MONTH()
-            $borrowsData = Borrowing::selectRaw('MONTH(borrowed_at) as month, COUNT(*) as total')
+            // MySQL/MariaDB → gunakan fungsi MONTH()
+            $borrowsData = Borrowing::selectRaw('MONTH(borrowed_at) AS month, COUNT(*) AS total')
                 ->groupBy('month')
                 ->orderBy('month')
                 ->pluck('total', 'month')
                 ->toArray();
         }
 
-        // Susun data untuk 12 bulan (jika ada bulan tanpa data, isi 0)
+        // Susun array untuk 12 bulan (isi 0 jika bulan tidak ada data)
         $borrowCounts = [];
         for ($i = 1; $i <= 12; $i++) {
             $borrowCounts[] = $borrowsData[$i] ?? 0;
         }
 
-        // Cari buku yang paling sering dipinjam
+        // Buku yang paling sering dipinjam
         $mostBorrowedBook = Borrowing::select('book_id')
             ->groupBy('book_id')
             ->orderByRaw('COUNT(*) DESC')
@@ -51,10 +56,10 @@ class BorrowingController extends Controller
             ->first()?->book;
 
         return view('admin.borrowings.index', [
-            'borrowings' => $borrowings,
-            'totalBorrowings' => $totalBorrowings,
-            'borrowsData' => $borrowCounts,
-            'mostBorrowedBook' => $mostBorrowedBook,
+            'borrowings'        => $borrowings,
+            'totalBorrowings'   => $totalBorrowings,
+            'borrowsData'       => $borrowCounts,
+            'mostBorrowedBook'  => $mostBorrowedBook,
         ]);
     }
 }
