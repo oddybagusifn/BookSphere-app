@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Borrowing;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 
 class BorrowingController extends Controller
@@ -17,12 +18,26 @@ class BorrowingController extends Controller
 
         $totalBorrowings = Borrowing::count();
 
-        // Data untuk grafik bulanan
-        $borrowsData = Borrowing::selectRaw('MONTH(borrowed_at) as month, COUNT(*) as total')
-            ->groupBy('month')
-            ->pluck('total', 'month')
-            ->toArray();
+        // Deteksi driver database (pgsql atau mysql)
+        $driver = DB::getDriverName();
 
+        if ($driver === 'pgsql') {
+            // PostgreSQL pakai EXTRACT
+            $borrowsData = Borrowing::selectRaw('EXTRACT(MONTH FROM borrowed_at) as month, COUNT(*) as total')
+                ->groupBy('month')
+                ->orderBy('month')
+                ->pluck('total', 'month')
+                ->toArray();
+        } else {
+            // MySQL/MariaDB pakai MONTH()
+            $borrowsData = Borrowing::selectRaw('MONTH(borrowed_at) as month, COUNT(*) as total')
+                ->groupBy('month')
+                ->orderBy('month')
+                ->pluck('total', 'month')
+                ->toArray();
+        }
+
+        // Susun data untuk 12 bulan (jika ada bulan tanpa data, isi 0)
         $borrowCounts = [];
         for ($i = 1; $i <= 12; $i++) {
             $borrowCounts[] = $borrowsData[$i] ?? 0;
