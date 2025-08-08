@@ -17,8 +17,8 @@ class AdminController extends Controller
     public function index()
     {
         $monthlyBorrows = DB::table('borrowings')
-            ->select(DB::raw('MONTH(created_at) as month'), DB::raw('COUNT(*) as total'))
-            ->groupBy(DB::raw('MONTH(created_at)'))
+            ->select(DB::raw('EXTRACT(MONTH FROM created_at) as month'), DB::raw('COUNT(*) as total'))
+            ->groupBy(DB::raw('EXTRACT(MONTH FROM created_at)'))
             ->orderBy('month')
             ->pluck('total', 'month')
             ->toArray();
@@ -28,18 +28,18 @@ class AdminController extends Controller
             $borrowsData[] = $monthlyBorrows[$i] ?? 0;
         }
 
-
         return view('admin.dashboard', [
-            'totalBooks'     => Book::count(),
-            'totalUsers'     => User::where('role', 'user')->count(),
-            'totalBorrows'   => Borrowing::count(),
-            'totalRequests'  => BookRequest::count(),
-            'latestBooks'    => Book::with('category')->latest()->take(5)->get(),
-            'borrowsData'    => $borrowsData,
+            'totalBooks'       => Book::count(),
+            'totalUsers'       => User::where('role', 'user')->count(),
+            'totalBorrows'     => Borrowing::count(),
+            'totalRequests'    => BookRequest::count(),
+            'latestBooks'      => Book::with('category')->latest()->take(5)->get(),
+            'borrowsData'      => $borrowsData,
             'latestBorrowings' => Borrowing::with(['user', 'book'])->orderBy('borrowed_at', 'desc')->limit(10)->get(),
-            'categories' => Category::latest()->get(),
+            'categories'       => Category::latest()->get(),
         ]);
     }
+
 
     // Form tambah buku
     public function create()
